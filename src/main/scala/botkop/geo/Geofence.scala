@@ -1,5 +1,6 @@
 package botkop.geo
 
+import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json
 
 import scala.io.Source
@@ -7,7 +8,7 @@ import scala.language.postfixOps
 
 case class Geofence(name: String, polygon: List[LatLng])
 
-case object Geofence {
+case object Geofence extends LazyLogging {
     implicit val f = Json.format[Geofence]
 
     /**
@@ -19,8 +20,7 @@ case object Geofence {
         } catch {
             case e: Throwable =>
 
-                //TODO: println with log statement that can be used in both scala 2.10 and 2.11
-                println("exception caught while reading geofence file: {}", e)
+                logger.error("exception caught while reading geofence file", e)
                 List[Geofence]()
         }
 
