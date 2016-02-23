@@ -11,7 +11,6 @@ import play.api.libs.json._
  */
 object GeoUtil {
 
-    case class LatLng (latitude: Double, longitude: Double)
     implicit val latLngReadFormat = Json.reads[LatLng]
     implicit val latLngWriteFormat = Json.writes[LatLng]
 
@@ -29,11 +28,11 @@ object GeoUtil {
            return false
         }
 
-        val lat3 = toRadians(point.latitude)
-        val lng3 = toRadians(point.longitude)
+        val lat3 = toRadians(point.lat)
+        val lng3 = toRadians(point.lng)
         val prev = polygon(size - 1)
-        var lat1 = toRadians(prev.latitude)
-        var lng1 = toRadians(prev.longitude)
+        var lat1 = toRadians(prev.lat)
+        var lng1 = toRadians(prev.lng)
         var nIntersect = 0
 
         for (point2 <- polygon) {
@@ -42,9 +41,9 @@ object GeoUtil {
             if (lat3 == lat1 && dLng3 == 0) {
                 return true
             }
-            val lat2 = toRadians(point2.latitude)
-            val lng2 = toRadians(point2.longitude)
-            // Offset longitudes by -lng1.
+            val lat2 = toRadians(point2.lat)
+            val lng2 = toRadians(point2.lng)
+            // Offset lngs by -lng1.
             if (intersects(lat1, lat2, wrap(lng2 - lng1, -PI, PI), lat3, dLng3, geodesic)) {
                 nIntersect += 1
             }
@@ -88,7 +87,7 @@ object GeoUtil {
         if (lat3 >= PI/2) {
             return true
         }
-        // Compare lat3 with latitude on the GC/Rhumb segment corresponding to lng3.
+        // Compare lat3 with lat on the GC/Rhumb segment corresponding to lng3.
         // Compare through a strictly-increasing function (tan() or mercator()) as convenient.
         if(geodesic)
             tan(lat3) >= tanLatGC(lat1, lat2, lng2, lng3)
@@ -97,27 +96,27 @@ object GeoUtil {
     }
 
     /**
-     * Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
+     * Returns tan(lat-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
      * See http://williams.best.vwh.net/avform.htm .
      */
     def tanLatGC(lat1: Double, lat2: Double, lng2: Double, lng3: Double) =
         (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2)
 
     /**
-     * Returns mercator(latitude-at-lng3) on the Rhumb line (lat1, lng1) to (lat2, lng2). lng1==0.
+     * Returns mercator(lat-at-lng3) on the Rhumb line (lat1, lng1) to (lat2, lng2). lng1==0.
      */
     def mercatorLatRhumb(lat1: Double, lat2: Double, lng2: Double, lng3: Double) =
         (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2
 
     /**
-     * Returns mercator Y corresponding to latitude.
+     * Returns mercator Y corresponding to lat.
      * See http://en.wikipedia.org/wiki/Mercator_projection .
      */
     def mercator(lat: Double) =
         log(tan(lat * 0.5 + PI/4))
 
     /**
-     * Returns latitude from mercator Y.
+     * Returns lat from mercator Y.
      */
     def inverseMercator(y: Double) =
         2 * atan(exp(y)) - PI / 2
