@@ -1,6 +1,6 @@
 package botkop.geo
 
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import play.api.libs.json.Json
 
 import scala.io.Source
