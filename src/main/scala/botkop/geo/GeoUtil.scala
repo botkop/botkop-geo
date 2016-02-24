@@ -11,9 +11,6 @@ import play.api.libs.json._
  */
 object GeoUtil {
 
-    implicit val latLngReadFormat = Json.reads[LatLng]
-    implicit val latLngWriteFormat = Json.writes[LatLng]
-
     /**
      * Computes whether the given point lies inside the specified polygon.
      * The polygon is always considered closed, regardless of whether the last point equals
