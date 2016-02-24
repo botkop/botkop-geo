@@ -2,8 +2,6 @@ package botkop.geo
 
 import java.lang.Math._
 
-import play.api.libs.json._
-
 /**
  * Translated from Java into Scala from:
  * https://github.com/googlemaps/android-maps-utils/tree/master/library/src/com/google/maps/android
