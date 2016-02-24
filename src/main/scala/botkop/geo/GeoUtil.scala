@@ -2,17 +2,12 @@ package botkop.geo
 
 import java.lang.Math._
 
-import play.api.libs.json._
-
 /**
  * Translated from Java into Scala from:
  * https://github.com/googlemaps/android-maps-utils/tree/master/library/src/com/google/maps/android
  * classes MathUtil.java and PoyUtil.java
  */
 object GeoUtil {
-
-    implicit val latLngReadFormat = Json.reads[LatLng]
-    implicit val latLngWriteFormat = Json.writes[LatLng]
 
     /**
      * Computes whether the given point lies inside the specified polygon.
