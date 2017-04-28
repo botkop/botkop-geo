@@ -134,7 +134,7 @@ object Polyline {
     output
   }
 
-  private def encode(coord: Double, factor: Double): String = {
+  def encode(coord: Double, factor: Double): String = {
 
     var coordinate: Int = Math.round(coord * factor).toInt
     coordinate = coordinate << 1
